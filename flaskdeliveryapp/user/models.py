@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 """User models."""
 import datetime as dt
-
-from flask_login import UserMixin
-
+from sqlalchemy.dialects.postgresql import (
+    ARRAY,
+    JSONB
+)
+from flask_login import (
+    UserMixin,
+    AnonymousUserMixin
+)
 from flaskdeliveryapp.database import (
     Column,
     Model,
@@ -12,16 +17,89 @@ from flaskdeliveryapp.database import (
     reference_col,
     relationship,
 )
+from app.constants import (
+    permission,
+    role_name,
+)
 from flaskdeliveryapp.extensions import bcrypt
+import pytz
+from werkzeug.security import (
+    generate_password_hash,
+    check_password_hash
+)
 
+class Role(db.Model):
+    """Roles for every user"""
 
-class Role(SurrogatePK, Model):
-    """A role for a user."""
+    __tablename__ = 'roles'
 
-    __tablename__ = "roles"
-    name = Column(db.String(80), unique=True, nullable=False)
-    user_id = reference_col("users", nullable=True)
-    user = relationship("User", backref="roles")
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    permissions = db.Column(db.BigInteger)
+
+    @classmethod
+    def populate(cls):
+            
+        roles = {
+            role_name.ANONYMOUS:(
+                permission.ORDER |
+                permission.PAY
+            ),
+            role_name.CUSTOMER:(
+                permission.ORDER |
+                permission.PAY |
+                permission.COMMENT
+            ),
+            role_name.DELIVERYPERSON:(
+                permission.BID |
+                permission.ROUTES |
+                permission.CUSTOMER_COMMENT
+            ), 
+            role_name.COOK: (
+                permission.FOOD_QUALITY |
+                permission.MENU |
+                permission.PRICES 
+            ),
+            role_name.SALESPERSON: (
+                permission.SUPPLIER
+            )
+            role_name.MANAGER:(
+                permission.COMMISSIONS |
+                permission.PAY |
+                permission.COMPLAINTS |
+                permission.MANAGEMENT
+            ),
+            role_name.ADMIN:(
+                permission.ORDER |
+                permission.PAY |
+                permission.ORDER |
+                permission.PAY |
+                permission.COMMENT |
+                permission.BID |
+                permission.ROUTES |
+                permission.CUSTOMER_COMMENT | 
+                permission.FOOD_QUALITY |
+                permission.MENU |
+                permission.PRICES |
+                permission.SUPPLIER | 
+                permission.COMMISSIONS |
+                permission.PAY |
+                permission.COMPLAINTS |
+                permission.MANAGEMENT
+            )
+
+        }
+
+        for name, value in roles.items():
+            role = Roles.query.filter_by(name=name).first()
+            if role is None:
+                role = cls(name=name)
+            role.permissions = value
+            db.session.add(role)
+        db.session.commit()
+
+    def __repr__(self):
+        return '<Roles %r>' % self.id
 
     def __init__(self, name, **kwargs):
         """Create instance."""
@@ -32,19 +110,27 @@ class Role(SurrogatePK, Model):
         return "<Role({name})>".format(name=self.name)
 
 
-class User(UserMixin, SurrogatePK, Model):
+class User(UserMixin, Model):
     """A user of the app."""
 
     __tablename__ = "users"
+    id = db.Column(db.Integer, primary_key=True)
     username = Column(db.String(80), unique=True, nullable=False)
     email = Column(db.String(80), unique=True, nullable=False)
-    #: The hashed password
-    password = Column(db.LargeBinary(128), nullable=True)
-    created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
     first_name = Column(db.String(30), nullable=True)
+    middle_name = Column(db.String(30), nullable=True)
     last_name = Column(db.String(30), nullable=True)
+    password = Column(db.LargeBinary(128), nullable=True)
+    phone_number = Column(db.string(25), nullable=True)
+    address = Column(db.string(200), nullable=True)
     active = Column(db.Boolean(), default=False)
-    is_admin = Column(db.Boolean(), default=False)
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    stars = db.Column(db.Integer, default=0)
+    salary = db.Column(db.Integer, default=0)
+    commision = db.Column(db.Integer, default=10)
+    credit_card = db.Column(db.Integer(10), nullable=True, default=None)
+    csv = db.Column(db.Integer(3), nullable=True, default=None)
+
 
     def __init__(self, username, email, password=None, **kwargs):
         """Create instance."""
