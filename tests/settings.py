@@ -1,11 +1,7 @@
 """Settings module for test app."""
 ENV = "development"
 TESTING = True
-<<<<<<< HEAD
-SQLALCHEMY_DATABASE_URI = "sqlite://"
-=======
-SQLALCHEMY_DATABASE_URI = "postgresql://localhost:5432/flaskdeliveryapp"
->>>>>>> 4a790e3ec4a00a3fcbff3ad0e4f39125ce6763e5
+SQLALCHEMY_DATABASE_URI = "postgresql://developer:5432/flaskdeliveryapp"
 SECRET_KEY = "not-so-secret-in-tests"
 BCRYPT_LOG_ROUNDS = (
     4
