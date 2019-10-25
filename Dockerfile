@@ -13,8 +13,12 @@ RUN apt-get install -y \
     && apt-get -y autoclean
 
 WORKDIR /app
+<<<<<<< HEAD
 COPY ["Pipfile", "shell_scripts/auto_pipenv.sh", "./"]
 RUN pip install pipenv
+=======
+COPY requirements requirements
+>>>>>>> 4a790e3ec4a00a3fcbff3ad0e4f39125ce6763e5
 
 COPY . .
 
@@ -26,6 +30,7 @@ RUN npm install
 
 # ================================= DEVELOPMENT ================================
 FROM base AS development
+<<<<<<< HEAD
 RUN pipenv install --dev
 EXPOSE 2992
 EXPOSE 5000
@@ -34,6 +39,16 @@ CMD [ "pipenv", "run", "npm", "start" ]
 # ================================= PRODUCTION =================================
 FROM base AS production
 RUN pipenv install
+=======
+RUN pip install --user -r requirements/dev.txt
+EXPOSE 2992
+EXPOSE 5000
+CMD [ "npm", "start" ]
+
+# ================================= PRODUCTION =================================
+FROM base AS production
+RUN pip install --user -r requirements/prod.txt
+>>>>>>> 4a790e3ec4a00a3fcbff3ad0e4f39125ce6763e5
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 COPY supervisord_programs /etc/supervisor/conf.d
 EXPOSE 5000
@@ -42,5 +57,10 @@ CMD ["-c", "/etc/supervisor/supervisord.conf"]
 
 # =================================== MANAGE ===================================
 FROM base AS manage
+<<<<<<< HEAD
 COPY --from=development /sid/.local/share/virtualenvs/ /sid/.local/share/virtualenvs/
 ENTRYPOINT [ "pipenv", "run", "flask" ]
+=======
+RUN pip install --user -r requirements/dev.txt
+ENTRYPOINT [ "flask" ]
+>>>>>>> 4a790e3ec4a00a3fcbff3ad0e4f39125ce6763e5

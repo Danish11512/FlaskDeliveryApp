@@ -1,7 +1,11 @@
 version: '3.6'
 
 x-build-args: &build_args
+<<<<<<< HEAD
   INSTALL_PYTHON_VERSION: 3.6
+=======
+  INSTALL_PYTHON_VERSION: 3.7
+>>>>>>> 4a790e3ec4a00a3fcbff3ad0e4f39125ce6763e5
   INSTALL_NODE_VERSION: 12
 
 x-default-volumes: &default_volumes

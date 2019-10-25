@@ -1,8 +1,15 @@
 ===============================
+<<<<<<< HEAD
 FlaskDeliveryApp
 ===============================
 
 flask delivery app 
+=======
+Flask Delivery App
+===============================
+
+A flask delivery app 
+>>>>>>> 4a790e3ec4a00a3fcbff3ad0e4f39125ce6763e5
 
 
 Quickstart
@@ -12,7 +19,11 @@ Run the following commands to bootstrap your environment ::
 
     git clone https://github.com/Danish11512/flaskdeliveryapp
     cd flaskdeliveryapp
+<<<<<<< HEAD
     pipenv install --dev
+=======
+    pip install -r requirements/dev.txt
+>>>>>>> 4a790e3ec4a00a3fcbff3ad0e4f39125ce6763e5
     cp .env.example .env
     npm install
     npm start  # run the webpack dev server and flask server using concurrently
