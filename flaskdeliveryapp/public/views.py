@@ -45,13 +45,20 @@ def home():
 
 @blueprint.route("/login/")
 @login_required
-def logout():
+def login():
     """Login."""
-    logout_user()
+    login_user()
     flash("You are logged in.", "info")
     return redirect(url_for("public.home"))
 
-
+@blueprint.route("/logout/")
+@login_required
+def logout():
+    """Login."""
+    logout_user()
+    flash("You are logged out.", "info")
+    return redirect(url_for("public.home"))
+    
 @blueprint.route("/register/", methods=["GET", "POST"])
 def register():
     """Register new user."""
