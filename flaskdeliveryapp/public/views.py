@@ -43,26 +43,12 @@ def home():
     return render_template("public/home.html", form=form)
 
 
-@blueprint.route("/logout/")
-@login_required
-def logout():
-    """Logout."""
-<<<<<<< HEAD
-    logout_user()
-    flash("You are logged out.", "info")
-=======
-    login_user()
-    flash("You are logged out", "info")
-    return redirect(url_for("public.home"))
-    
-
 @blueprint.route("/login/")
 @login_required
 def logout():
     """Login."""
     logout_user()
     flash("You are logged in.", "info")
->>>>>>> 4a790e3ec4a00a3fcbff3ad0e4f39125ce6763e5
     return redirect(url_for("public.home"))
 
 

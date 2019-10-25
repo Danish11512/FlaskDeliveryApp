@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
 """User models."""
 import datetime as dt
-<<<<<<< HEAD
-
-from flask_login import UserMixin
-
-=======
 from sqlalchemy.dialects.postgresql import (
     ARRAY,
     JSONB
@@ -14,7 +9,6 @@ from flask_login import (
     UserMixin,
     AnonymousUserMixin
 )
->>>>>>> 4a790e3ec4a00a3fcbff3ad0e4f39125ce6763e5
 from flaskdeliveryapp.database import (
     Column,
     Model,
@@ -23,18 +17,6 @@ from flaskdeliveryapp.database import (
     reference_col,
     relationship,
 )
-<<<<<<< HEAD
-from flaskdeliveryapp.extensions import bcrypt
-
-
-class Role(SurrogatePK, Model):
-    """A role for a user."""
-
-    __tablename__ = "roles"
-    name = Column(db.String(80), unique=True, nullable=False)
-    user_id = reference_col("users", nullable=True)
-    user = relationship("User", backref="roles")
-=======
 from flaskdeliveryapp.constants import (
     permission,
     role_name,
@@ -118,7 +100,6 @@ class Role(db.Model):
 
     def __repr__(self):
         return '<Roles %r>' % self.id
->>>>>>> 4a790e3ec4a00a3fcbff3ad0e4f39125ce6763e5
 
     def __init__(self, name, **kwargs):
         """Create instance."""
@@ -129,42 +110,6 @@ class Role(db.Model):
         return "<Role({name})>".format(name=self.name)
 
 
-<<<<<<< HEAD
-class User(UserMixin, SurrogatePK, Model):
-    """A user of the app."""
-
-    __tablename__ = "users"
-    username = Column(db.String(80), unique=True, nullable=False)
-    email = Column(db.String(80), unique=True, nullable=False)
-    #: The hashed password
-    password = Column(db.LargeBinary(128), nullable=True)
-    created_at = Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
-    first_name = Column(db.String(30), nullable=True)
-    last_name = Column(db.String(30), nullable=True)
-    active = Column(db.Boolean(), default=False)
-    is_admin = Column(db.Boolean(), default=False)
-
-    def __init__(self, username, email, password=None, **kwargs):
-        """Create instance."""
-        db.Model.__init__(self, username=username, email=email, **kwargs)
-        if password:
-            self.set_password(password)
-        else:
-            self.password = None
-
-    def set_password(self, password):
-        """Set password."""
-        self.password = bcrypt.generate_password_hash(password)
-
-    def check_password(self, value):
-        """Check password."""
-        return bcrypt.check_password_hash(self.password, value)
-
-    @property
-    def full_name(self):
-        """Full user name."""
-        return "{0} {1}".format(self.first_name, self.last_name)
-=======
 class User(UserMixin, Model):
     """A user of the app."""
     db.metadata.clear()
@@ -301,7 +246,6 @@ class User(UserMixin, Model):
                 )
                 db.session.add(user)
         db.session.commit()
->>>>>>> 4a790e3ec4a00a3fcbff3ad0e4f39125ce6763e5
 
     def __repr__(self):
         """Represent instance as a unique string."""
