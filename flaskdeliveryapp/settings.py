@@ -15,7 +15,7 @@ env.read_env()
 ENV = env.str("FLASK_ENV", default="production")
 DEBUG = ENV == "development"
 SQLALCHEMY_DATABASE_URI = (os.environ.get('DEV_DATABASE_URL') or
-                               'postgresql://developer@127.0.0.1:5432/flaskdeliveryapp')
+                               'postgresql://localhost@127.0.0.1:5432/flaskdeliveryapp')
 SECRET_KEY = env.str("SECRET_KEY")
 BCRYPT_LOG_ROUNDS = env.int("BCRYPT_LOG_ROUNDS", default=13)
 DEBUG_TB_ENABLED = DEBUG
