@@ -47,6 +47,15 @@ def home():
 @login_required
 def logout():
     """Logout."""
+    login_user()
+    flash("You are logged in.", "info")
+    return redirect(url_for("public.home"))
+    
+
+@blueprint.route("/login/")
+@login_required
+def logout():
+    """Login."""
     logout_user()
     flash("You are logged out.", "info")
     return redirect(url_for("public.home"))
