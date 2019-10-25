@@ -240,6 +240,7 @@ class User(UserMixin, Model):
                     middle_initial=row['middle_initial'],
                     last_name=row['last_name'],
                     email=row['email'],
+                    username=row['username'],
                     # phone_number=row['phone_number'], HERe
                     role_id=roles_dict[row['role']],
                     password=current_app.config['DEFAULT_PASSWORD']
