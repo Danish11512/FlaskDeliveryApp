@@ -13,7 +13,7 @@ CUSTOMER_COMMENT = 0x000000020
 # Cook Permissions - food quality, menu, prices 
 FOOD_QUALITY = 0x000000040
 MENU = 0x000000080
-PRICES 0x000000100
+PRICES = 0x000000100
 
 # Salesperson Permissions - Nagotiate with Supplier
 SUPPLIER = 0x000000200
