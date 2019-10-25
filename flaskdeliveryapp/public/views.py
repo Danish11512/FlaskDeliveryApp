@@ -48,7 +48,7 @@ def home():
 def logout():
     """Logout."""
     login_user()
-    flash("You are logged in.", "info")
+    flash("You are logged out", "info")
     return redirect(url_for("public.home"))
     
 
@@ -57,7 +57,7 @@ def logout():
 def logout():
     """Login."""
     logout_user()
-    flash("You are logged out.", "info")
+    flash("You are logged in.", "info")
     return redirect(url_for("public.home"))
 
 
