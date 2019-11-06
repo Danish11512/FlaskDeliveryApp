@@ -131,7 +131,7 @@ class User(UserMixin, Model):
     salary = db.Column(db.Integer, default=0)
     commision = db.Column(db.Integer, default=10)
     credit_card = db.Column(db.Integer, nullable=True, default=None)
-    csv = db.Column(db.Integer, nullable=True, default=None)
+    cv = db.Column(db.Integer, nullable=True, default=None)
 
 
     def __init__(self,
@@ -149,7 +149,7 @@ class User(UserMixin, Model):
                  salary,
                  commision, 
                  credit_card,
-                 csv):
+                 cv):
         self.username = username
         self.first_name = first_name
         self.middle_initial = middle_initial
@@ -164,7 +164,7 @@ class User(UserMixin, Model):
         self.salary = salary
         self.commision = commision
         self.credit_card = credit_card
-        self.csv = csv
+        self.cv = cv
 
 
     @property
@@ -241,9 +241,10 @@ class User(UserMixin, Model):
                     last_name=row['last_name'],
                     email=row['email'],
                     username=row['username'],
-                    # phone_number=row['phone_number'], HERe
+                    phone_number=row['phone_number'],
                     role_id=roles_dict[row['role']],
-                    password=current_app.config['DEFAULT_PASSWORD']
+                    password=current_app.config['DEFAULT_PASSWORD'], 
+
                 )
                 db.session.add(user)
         db.session.commit()
