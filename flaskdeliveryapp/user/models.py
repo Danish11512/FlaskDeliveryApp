@@ -114,7 +114,7 @@ class User(UserMixin, Model):
     """A user of the app."""
     db.metadata.clear()
     __tablename__ = "users"
-    __table_args__ = {'extend_existing': True}
+
 
     id = db.Column(db.Integer, primary_key=True)
     username = Column(db.String(80), unique=True, nullable=False) 
@@ -126,12 +126,13 @@ class User(UserMixin, Model):
     phone_number = Column(db.String(25), nullable=True)
     address = Column(db.String(200), nullable=True)
     active = Column(db.Boolean(), default=False)
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    role_id = db.Column(db.Integer, db.ForeignKey(Role.id))
     stars = db.Column(db.Integer, default=0)
     salary = db.Column(db.Integer, default=0)
     commision = db.Column(db.Integer, default=10)
     credit_card = db.Column(db.Integer, nullable=True, default=None)
     cv = db.Column(db.Integer, nullable=True, default=None)
+    ctype = db.Column(db.String(10), nullable=True, default='')
 
 
     def __init__(self,
@@ -149,7 +150,8 @@ class User(UserMixin, Model):
                  salary,
                  commision, 
                  credit_card,
-                 cv):
+                 cv, 
+                 ctype):
         self.username = username
         self.first_name = first_name
         self.middle_initial = middle_initial
@@ -165,6 +167,7 @@ class User(UserMixin, Model):
         self.commision = commision
         self.credit_card = credit_card
         self.cv = cv
+        self.ctype=ctype
 
 
     @property
@@ -243,15 +246,55 @@ class User(UserMixin, Model):
                     username=row['username'],
                     phone_number=row['phone_number'],
                     role_id=roles_dict[row['role']],
-                    password=current_app.config['DEFAULT_PASSWORD'], 
-
+                    password=current_app.config['DEFAULT_PASSWORD'],
+                    address=row['address'],
+                    active=row['active'],
+                    stars=row['stars'],
+                    salary=row['salary'],
+                    commision=row['commision'],
+                    credit_card=row['credit_card'],
+                    cv=row['cv'], 
+                    ctype=row['ctype']
                 )
                 db.session.add(user)
         db.session.commit()
 
+    @staticmethod
+    def generate_fake(count=20):
+        """
+        Used to generate fake users.
+        """
+        from sqlalchemy.exc import IntegrityError
+        from random import seed, randint
+
+        import forgery_py
+
+        seed()
+        
+        for i in range(count):
+            first = forgery_py.name.first_name()
+            middle = forgery_py.middle_initial()
+            last = forgery_py.name.last_name()
+            username = first + str(randint(0,99))
+            # forgery_py.address.state_abbrev()
+            # + ', ' + forgery_py.address.zip_code())
+            e = (first[:1] + last + "@gmail.com").lower()
+            u = User(
+                email=e,
+                password=forgery_py.lorem_ipsum.word(),  # change to set a universal password for QA testing
+                first_name=first,
+                last_name=last,
+                middle_initial=middle,
+                username=username,
+                phone_number=forgery_py.address.phone(),
+                active=True
+            )
+            db.session.add(u)
+            try:
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
+
     def __repr__(self):
         """Represent instance as a unique string."""
         return "<User({username!r})>".format(username=self.username)
-
-
-
