@@ -7,8 +7,9 @@ dotenv_path = os.path.join(basedir, '.env')
 load_dotenv(dotenv_path)
 
 
+
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'flasksercretkey'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -50,12 +51,14 @@ class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = (os.environ.get('DEV_DATABASE_URL') or
                                'postgresql://developer@127.0.0.1:5432/flaskdeliveryapp')
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'flasksercretkey'
 
 
 class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = (os.environ.get('TEST_DATABASE_URL') or
                                'postgresql://developer@127.0.0.1:5432/flaskdeliveryapp')
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'flasksercretkey'
 
 
 class HerokuConfig(Config):
@@ -66,6 +69,7 @@ class HerokuConfig(Config):
     MAIL_USERNAME = os.environ.get('MAILGUN_SMTP_LOGIN')
     MAIL_PASSWORD = os.environ.get('MAILGUN_SMTP_PASSWORD')
     MAIL_USE_TLES = True
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'flasksercretkey'
 
 
 class ProductionConfig(Config):

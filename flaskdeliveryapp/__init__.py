@@ -36,6 +36,7 @@ def load_db(db):
 
 def create_app(config_name):  # App Factory
     app = Flask(__name__)
+    app.config['SECRET_KEY'] = 'flasksecretkey'
     app.config.from_object(config[config_name])
 
     if os.environ.get("DATABASE_URL") is None:

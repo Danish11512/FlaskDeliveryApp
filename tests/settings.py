@@ -2,7 +2,7 @@
 ENV = "development"
 TESTING = True
 SQLALCHEMY_DATABASE_URI = "postgresql://developer:5432/flaskdeliveryapp"
-SECRET_KEY = "not-so-secret-in-tests"
+SECRET_KEY = "flasksecretkey"
 BCRYPT_LOG_ROUNDS = (
     4
 )  # For faster tests; needs at least 4 to avoid "ValueError: Invalid rounds"
